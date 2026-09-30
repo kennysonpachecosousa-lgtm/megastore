@@ -60,3 +60,11 @@ megastore/
 ├── Cargo.lock
 ├── README.md
 └── .gitignore
+
+---
+
+## 5. Pitch
+
+Vídeo de apresentação e demonstração do projeto:
+
+https://youtu.be/pgjc9Sdr_g8
