@@ -5,8 +5,12 @@ use megastore::{
     repository::Repository,
 };
 
+use std::time::Instant;
+
 #[test]
 fn teste_integracao_completo() {
+
+
     // =========================
     // 1. Criar estruturas
     // =========================
@@ -152,4 +156,47 @@ fn teste_recomendacao_sem_candidatos() {
     // Como não existe outro produto para recomendar,
     // o resultado deve ser vazio.
     assert!(recomendacoes.is_empty());
+}
+#[test]
+fn teste_desempenho_recomendacao() {
+    let tamanhos = [100, 500, 1000];
+
+    for tamanho in tamanhos {
+        let mut graph = Graph::new();
+
+        graph.add_node(Node::Cliente(1));
+
+        for id in 1..=tamanho {
+            graph.add_node(Node::Produto(id));
+        }
+
+        graph.add_edge(
+            Node::Cliente(1),
+            Node::Produto(1),
+            1.0,
+            "compra".to_string(),
+        );
+
+        for id in 1..tamanho {
+            graph.add_edge(
+                Node::Produto(id),
+                Node::Produto(id + 1),
+                0.8,
+                "similaridade".to_string(),
+            );
+        }
+
+        let inicio = Instant::now();
+
+        let recomendacoes = recomendar_produtos(&graph, 1, 2);
+
+        let duracao = inicio.elapsed();
+
+        println!(
+            "Produtos: {} | Recomendações: {} | Tempo: {:?}",
+            tamanho,
+            recomendacoes.len(),
+            duracao
+        );
+    }
 }
